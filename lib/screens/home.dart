@@ -20,12 +20,34 @@ class HomeScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextButton(
-                    onPressed: () => sl.get<ConvertService>().imageToContributionGrid(),
+                    onPressed: () => sl
+                        .get<ConvertService>()
+                        .createProccessedImage(context, "TODO: path"),
                     child: const Text("chris click here"),
                   ),
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 2 / 3,
                     child: ContributionGrid(grid: state.grid),
+                  ),
+                  Expanded(
+                    child: FutureBuilder(
+                      future: sl
+                          .get<ConvertService>()
+                          .createProccessedImage(context, "TODO: path"),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return Container(
+                              // decoration: BoxDecoration(
+                              child: RawImage(image: snapshot.data)
+                              // ),
+                              );
+                        } else if (snapshot.hasError) {
+                          return Text("loading/error");
+                        } else {
+                          return Text("loading/error");
+                        }
+                      },
+                    ),
                   ),
                 ],
               ),

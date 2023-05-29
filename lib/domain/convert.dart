@@ -1,5 +1,9 @@
+import 'dart:io';
+import 'dart:ui' as ui;
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:github_painter/cubit/grid_cubit.dart';
 import 'package:flutter/services.dart' show ByteData, rootBundle;
-
+import 'package:time/time.dart';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
 
@@ -53,41 +57,106 @@ class GreenIntensity {
 }
 
 class ConvertService {
-  List<List<int>> imageToContributionGrid() {
-    // throw UnimplementedError();
-    testimage();
-    return [[]];
+  int convertColor(int color) {
+    if (color < 63.75) {
+      return 4;
+    } else if (color < 127.5) {
+      return 3;
+    } else if (color < 191.25) {
+      return 2;
+    } else if (color < 255) {
+      return 1;
+    } else {
+      return 0;
+    }
   }
 
-  Future<void> testimage() async {
-    // Read a jpeg image from file.
-    // final image = img.decodePng(File('assets/images/image1.png').readAsBytesSync());
-    // final image = img.decodePng(html.File('assets/images/image1.png'.codeUnits, 'assets/images/image1.png'));
-    // print(image);
-    ByteData bytes = await rootBundle.load('assets/images/image1.png');
-    // print(bytes);
+  List<List<GreenIntensity>> imageToContributionGrid(img.Image image) {
+    final temp = List.generate(
+        7,
+        (j) => List.generate(
+            52,
+            (i) =>
+                GreenIntensity(convertColor(image.getPixel(i, j).r as int))));
+    convertContributionGridToShell(temp);
+    return temp;
+  }
+
+  Future<ui.Image> createProccessedImage(
+      BuildContext context, String path) async {
+    ByteData bytes = await rootBundle.load('assets/images/image5.png');
+    // img.Image? image = img.decodePng(bytes.buffer.asUint8List());
     img.Image? image = img.decodePng(bytes.buffer.asUint8List());
-    // Resize the image to a 120x? thumbnail (maintaining the aspect ratio).
-    print("test?");
-    // final thumbnail = img.copyResize(image!, width: 120);
-    // // Save the thumbnail to a jpeg file.
-    print(image?.getPixel(0, 0));
-    final pngBytes = img.encodePng(image!);
-    // print(pngBytes);
-    // final file = File('thumbnail.png')..writeAsBytesSync(pngBytes);
+    image = img.grayscale(image!);
 
-    // print("tried encoding as png");
-    // // Encode the thumbnail to a png.
-    // img.encodePngFile("assets/images/test.png", image);
-    print("tried encoding as png");
-    img.encodeImageFile("assets/images/test.png", image);
-    print("tasdjaiusdaoisdja");
+    image = img.pixelate(image, size: image.width ~/ 53);
+    image = img.copyResize(image, width: 53, height: 7);
 
-    // // print(thumbnail);R
-    // // final output = img.encodePng(image!);
-    // // final output = img.encodePngFile(image!);
-    // print("about to write");
-    // img.encodeImageFile('assets/images/test.png', image!);
-    // print("testidk");
+    context.read<GridCubit>().setGrid(imageToContributionGrid(image));
+    return await convertImageToFlutterUi(
+        img.copyResize(image, width: 53 * 100, height: 7 * 100));
+  }
+
+  Future<ui.Image> convertImageToFlutterUi(img.Image image) async {
+    if (image.format != img.Format.uint8 || image.numChannels != 4) {
+      final cmd = img.Command()
+        ..image(image)
+        ..convert(format: img.Format.uint8, numChannels: 4);
+      final rgba8 = await cmd.getImageThread();
+      if (rgba8 != null) {
+        image = rgba8;
+      }
+    }
+
+    ui.ImmutableBuffer buffer =
+        await ui.ImmutableBuffer.fromUint8List(image.toUint8List());
+
+    ui.ImageDescriptor id = ui.ImageDescriptor.raw(buffer,
+        height: image.height,
+        width: image.width,
+        pixelFormat: ui.PixelFormat.rgba8888);
+
+    ui.Codec codec = await id.instantiateCodec(
+        targetHeight: image.height, targetWidth: image.width);
+
+    ui.FrameInfo fi = await codec.getNextFrame();
+    ui.Image uiImage = fi.image;
+
+    return uiImage;
+  }
+
+  /*
+  touch commitChange.txt
+  echo "Exact Current Time" >> commitChange.txt
+  git add .
+  git commit --amend --date="2023-04-26 20:12:20" -m "committing"
+  git push
+  */
+
+  void convertContributionGridToShell(List<List<GreenIntensity>> grid) {
+    String shell = "";
+    final currentInjectionDayStart = DateTime(2019, 01, 01);
+
+    int counter = 0;
+    for (int i = 0; i < grid.length; i++) {
+      for (int j = 0; j < grid[0].length; j++) {
+        int commits = grid[i][j].value();
+        for (int k = 0; k < commits; k++) {
+          final TimeOfDay = DateTime.now() - 1.days;
+          shell += "touch commitChange.txt\n";
+          shell += "echo \"$TimeOfDay\" >> commitChange.txt\n";
+          shell += "git add .\n";
+          final currentInjectionDay =
+              currentInjectionDayStart + counter.days + i.seconds + j.seconds;
+          shell +=
+              "git commit --amend --date=\"$currentInjectionDay\" -m \"committing\"\n";
+          shell += "git push\n";
+        }
+        counter++;
+        shell += "\n";
+      }
+      // shell += "\n";
+    }
+    print(shell);
   }
 }

@@ -13,5 +13,10 @@ class EditState extends GridState {
   const EditState(this.grid);
 
   @override
-  List<Object> get props => [];
+  bool operator ==(Object other) {
+    return false;
+  }
+
+  @override
+  List<Object> get props => [grid];
 }
