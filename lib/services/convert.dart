@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:github_painter/cubit/grid_cubit.dart';
 import 'package:flutter/services.dart' show ByteData, rootBundle;
+import 'package:image_picker/image_picker.dart';
 import 'package:time/time.dart';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
@@ -71,30 +72,30 @@ class ConvertService {
     }
   }
 
+  Future<XFile?> pickImg() async {
+    final ImagePicker picker = ImagePicker();
+    return await picker.pickImage(source: ImageSource.gallery);
+  }
+
   List<List<GreenIntensity>> imageToContributionGrid(img.Image image) {
-    final temp = List.generate(
-        7,
-        (j) => List.generate(
-            52,
-            (i) =>
-                GreenIntensity(convertColor(image.getPixel(i, j).r as int))));
+    final temp =
+        List.generate(7, (j) => List.generate(52, (i) => GreenIntensity(convertColor(image.getPixel(i, j).r as int))));
     convertContributionGridToShell(temp);
     return temp;
   }
 
-  Future<ui.Image> createProccessedImage(
-      BuildContext context, String path) async {
-    ByteData bytes = await rootBundle.load('assets/images/image5.png');
-    // img.Image? image = img.decodePng(bytes.buffer.asUint8List());
-    img.Image? image = img.decodePng(bytes.buffer.asUint8List());
-    image = img.grayscale(image!);
+  Future<ui.Image> createProccessedImage(BuildContext context, String path) async {
+    return rootBundle.load(path).then((value) async {
+      ByteData bytes = value;
+      img.Image? image = img.decodePng(bytes.buffer.asUint8List());
+      image = img.grayscale(image!);
 
-    image = img.pixelate(image, size: image.width ~/ 53);
-    image = img.copyResize(image, width: 53, height: 7);
+      image = img.pixelate(image, size: image.width ~/ 53);
+      image = img.copyResize(image, width: 53, height: 7);
 
-    context.read<GridCubit>().setGrid(imageToContributionGrid(image));
-    return await convertImageToFlutterUi(
-        img.copyResize(image, width: 53 * 100, height: 7 * 100));
+      context.read<GridCubit>().setGrid(imageToContributionGrid(image));
+      return await convertImageToFlutterUi(img.copyResize(image, width: 53 * 100, height: 7 * 100));
+    });
   }
 
   Future<ui.Image> convertImageToFlutterUi(img.Image image) async {
@@ -108,16 +109,12 @@ class ConvertService {
       }
     }
 
-    ui.ImmutableBuffer buffer =
-        await ui.ImmutableBuffer.fromUint8List(image.toUint8List());
+    ui.ImmutableBuffer buffer = await ui.ImmutableBuffer.fromUint8List(image.toUint8List());
 
-    ui.ImageDescriptor id = ui.ImageDescriptor.raw(buffer,
-        height: image.height,
-        width: image.width,
-        pixelFormat: ui.PixelFormat.rgba8888);
+    ui.ImageDescriptor id =
+        ui.ImageDescriptor.raw(buffer, height: image.height, width: image.width, pixelFormat: ui.PixelFormat.rgba8888);
 
-    ui.Codec codec = await id.instantiateCodec(
-        targetHeight: image.height, targetWidth: image.width);
+    ui.Codec codec = await id.instantiateCodec(targetHeight: image.height, targetWidth: image.width);
 
     ui.FrameInfo fi = await codec.getNextFrame();
     ui.Image uiImage = fi.image;
@@ -146,10 +143,8 @@ class ConvertService {
           shell += "touch commitChange.txt\n";
           shell += "echo \"$TimeOfDay\" >> commitChange.txt\n";
           shell += "git add .\n";
-          final currentInjectionDay =
-              currentInjectionDayStart + counter.days + i.seconds + j.seconds;
-          shell +=
-              "git commit --amend --date=\"$currentInjectionDay\" -m \"committing\"\n";
+          final currentInjectionDay = currentInjectionDayStart + counter.days + i.seconds + j.seconds;
+          shell += "git commit --amend --date=\"$currentInjectionDay\" -m \"$currentInjectionDay\"\n";
           shell += "git push\n";
         }
         counter++;
@@ -158,5 +153,6 @@ class ConvertService {
       // shell += "\n";
     }
     print(shell);
+    File('assets/images/temptest.sh').writeAsString(shell);
   }
 }

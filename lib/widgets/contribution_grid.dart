@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:github_painter/domain/convert.dart';
+import 'package:github_painter/services/convert.dart';
 import 'package:github_painter/widgets/green_tile.dart';
 
 class ContributionGrid extends StatelessWidget {

@@ -1,5 +1,5 @@
 import 'package:get_it/get_it.dart';
-import 'package:github_painter/domain/convert.dart';
+import 'package:github_painter/services/convert.dart';
 
 import 'cubit/grid_cubit.dart';
 

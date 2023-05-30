@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:github_painter/domain/convert.dart';
+import 'package:github_painter/services/convert.dart';
 
 class GreenTile extends StatefulWidget {
   const GreenTile({super.key, required this.intensity});
