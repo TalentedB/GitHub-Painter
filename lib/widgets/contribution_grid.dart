@@ -17,6 +17,7 @@ class ContributionGrid extends StatelessWidget {
           color: Colors.black,
         ),
         child: GridView.builder(
+          physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: grid[0].length,

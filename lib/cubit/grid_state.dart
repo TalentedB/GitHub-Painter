@@ -9,8 +9,9 @@ abstract class GridState extends Equatable {
 
 class EditState extends GridState {
   final List<List<GreenIntensity>> grid;
+  final String output;
 
-  const EditState(this.grid);
+  const EditState(this.grid, this.output);
 
   @override
   bool operator ==(Object other) {
@@ -18,5 +19,5 @@ class EditState extends GridState {
   }
 
   @override
-  List<Object> get props => [grid];
+  List<Object> get props => [grid, output];
 }

@@ -80,12 +80,26 @@ class ConvertService {
   List<List<GreenIntensity>> imageToContributionGrid(img.Image image) {
     final temp =
         List.generate(7, (j) => List.generate(52, (i) => GreenIntensity(convertColor(image.getPixel(i, j).r as int))));
-    convertContributionGridToShell(temp);
+    convertContributionGridToShell(temp, 2019);
     return temp;
   }
 
-  Future<ui.Image> createProccessedImage(BuildContext context, String path) async {
-    return rootBundle.load(path).then((value) async {
+  // Future<ui.Image> createProccessedImage(BuildContext context, String path) async {
+  //   return rootBundle.load(path).then((value) async {
+  //     ByteData bytes = value;
+  //     img.Image? image = img.decodePng(bytes.buffer.asUint8List());
+  //     image = img.grayscale(image!);
+
+  //     image = img.pixelate(image, size: image.width ~/ 53);
+  //     image = img.copyResize(image, width: 53, height: 7);
+
+  //     context.read<GridCubit>().setGrid(imageToContributionGrid(image));
+  //     return await convertImageToFlutterUi(img.copyResize(image, width: 53 * 100, height: 7 * 100));
+  //   });
+  // }
+
+  Future<ui.Image> createProccessedImage(BuildContext context, XFile? path) async {
+    return rootBundle.load(path!.path).then((value) async {
       ByteData bytes = value;
       img.Image? image = img.decodePng(bytes.buffer.asUint8List());
       image = img.grayscale(image!);
@@ -93,7 +107,7 @@ class ConvertService {
       image = img.pixelate(image, size: image.width ~/ 53);
       image = img.copyResize(image, width: 53, height: 7);
 
-      context.read<GridCubit>().setGrid(imageToContributionGrid(image));
+      context.read<GridCubit>().setGrid(imageToContributionGrid(image), "...");
       return await convertImageToFlutterUi(img.copyResize(image, width: 53 * 100, height: 7 * 100));
     });
   }
@@ -130,9 +144,9 @@ class ConvertService {
   git push
   */
 
-  void convertContributionGridToShell(List<List<GreenIntensity>> grid) {
+  String convertContributionGridToShell(List<List<GreenIntensity>> grid, int year) {
     String shell = "";
-    final currentInjectionDayStart = DateTime(2019, 01, 01);
+    final currentInjectionDayStart = DateTime(year, 01, 01);
 
     int counter = 0;
     for (int i = 0; i < grid.length; i++) {
@@ -152,7 +166,8 @@ class ConvertService {
       }
       // shell += "\n";
     }
-    print(shell);
-    File('assets/images/temptest.sh').writeAsString(shell);
+    // print(shell);
+    // File('assets/images/temptest.sh').writeAsString(shell);
+    return shell;
   }
 }
