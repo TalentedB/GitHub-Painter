@@ -121,6 +121,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.4"
+  file_picker:
+    dependency: "direct main"
+    description:
+      name: file_picker
+      sha256: "9d6e95ec73abbd31ec54d0e0df8a961017e165aba1395e462e5b31ea0c165daf"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.3.1"
+  file_selector_platform_interface:
+    dependency: transitive
+    description:
+      name: file_selector_platform_interface
+      sha256: bf15ba6978161e4bb28beeb7cc8106d9d7febcfaf9f7daeab11ba5f54fa8148e
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.5.0"
+  file_selector_windows:
+    dependency: transitive
+    description:
+      name: file_selector_windows
+      sha256: "8bbcc82fe0d3cdf5ae5c289492ddfd703ec028028d9f194dbceae04cfbde1c48"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.8.2+2"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -240,6 +264,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.6.3"
+  image_picker_windows:
+    dependency: "direct main"
+    description:
+      name: image_picker_windows
+      sha256: f0d7547808d2613014869108e28a976413c146a775bcb5a9e54a534ff08dd97f
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.0+6"
   js:
     dependency: transitive
     description:

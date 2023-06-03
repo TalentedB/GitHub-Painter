@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class YearSelect extends StatefulWidget {
-  const YearSelect({super.key, required this.onSubmit});
+  const YearSelect({Key? key, required this.onSubmit}) : super(key: key);
 
   final Function(String text) onSubmit;
 
@@ -24,15 +24,18 @@ class _YearSelectState extends State<YearSelect> {
     super.dispose();
   }
 
+  void _handleSubmit() {
+    final text = _controller.text;
+    widget.onSubmit(text);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(
-          Radius.circular(
-            10,
-          ),
+          Radius.circular(10),
         ),
         color: Colors.grey,
         border: Border.all(
@@ -42,6 +45,7 @@ class _YearSelectState extends State<YearSelect> {
       ),
       child: TextField(
         controller: _controller,
+        onSubmitted: (_) => _handleSubmit(),
       ),
     );
   }

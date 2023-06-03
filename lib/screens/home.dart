@@ -7,6 +7,7 @@ import 'package:github_painter/widgets/contribution_grid.dart';
 import 'package:github_painter/widgets/sh_output.dart';
 import 'package:github_painter/widgets/year_select.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,7 +17,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  XFile? _image;
+  FilePickerResult? _image;
   int year = DateTime.now().year;
 
   @override
@@ -32,20 +33,27 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextButton(
-                    onPressed: () => sl.get<ConvertService>().createProccessedImage(context, _image),
+                    onPressed: () => sl
+                        .get<ConvertService>()
+                        .createProccessedImage(context, _image, year),
                     child: const Text("chris click here"),
                   ),
                   TextButton(
                     onPressed: () {
                       context.read<GridCubit>().setGrid(
                           (context.read<GridCubit>().state as EditState).grid,
-                          sl.get<ConvertService>().convertContributionGridToShell(
-                              (context.read<GridCubit>().state as EditState).grid, year));
+                          sl
+                              .get<ConvertService>()
+                              .convertContributionGridToShell(
+                                  (context.read<GridCubit>().state as EditState)
+                                      .grid,
+                                  year));
                     },
                     child: const Text("grid"),
                   ),
                   TextButton(
-                    onPressed: () async => _image = await sl.get<ConvertService>().pickImg(),
+                    onPressed: () async =>
+                        _image = await sl.get<ConvertService>().pickImg(),
                     child: const Text("pick img"),
                   ),
                   SizedBox(
@@ -58,6 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         setState(() {
                           this.year = int.parse(year);
                         });
+                        print(year);
                       } catch (e) {
                         print("error $e");
                       }
@@ -65,7 +74,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   FractionallySizedBox(
                     widthFactor: 2 / 3,
-                    child: ShOutput(output: (context.watch<GridCubit>().state as EditState).output),
+                    child: ShOutput(
+                        output: (context.watch<GridCubit>().state as EditState)
+                            .output),
                   ),
                   // Expanded(
                   //   child: FutureBuilder(
