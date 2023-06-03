@@ -29,15 +29,15 @@ class GreenIntensity {
   Color color() {
     switch (_val) {
       case 0:
-        return const Color.fromARGB(255, 7, 7, 7);
+        return const Color.fromARGB(255, 22, 27, 34);
       case 1:
-        return Colors.green[100]!;
+        return const Color.fromARGB(255, 14, 68, 41);
       case 2:
-        return Colors.green[300]!;
+        return const Color.fromARGB(255, 0, 109, 50);
       case 3:
-        return Colors.green[500]!;
+        return const Color.fromARGB(255, 38, 166, 65);
       case 4:
-        return Colors.green[700]!;
+        return const Color.fromARGB(255, 57, 211, 83);
       default:
         throw Exception("Green intensity must be between 0 and 4");
     }
