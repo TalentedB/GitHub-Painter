@@ -92,23 +92,6 @@ class ConvertService {
     return temp;
   }
 
-  // Future<ui.Image> createProccessedImage(
-  //     BuildContext context, XFile? path) async {
-  //   print(path!.path.toString());
-  //   return rootBundle.load(path!.path).then((value) async {
-  //     ByteData bytes = value;
-  //     img.Image? image = img.decodePng(bytes.buffer.asUint8List());
-  //     image = img.grayscale(image!);
-
-  //     image = img.pixelate(image, size: image.width ~/ 53);
-  //     image = img.copyResize(image, width: 53, height: 7);
-
-  //     context.read<GridCubit>().setGrid(imageToContributionGrid(image), "...");
-  //     return await convertImageToFlutterUi(
-  //         img.copyResize(image, width: 53 * 100, height: 7 * 100));
-  //   });
-  // }
-
   void createProccessedImage(
       BuildContext context, FilePickerResult? path, int year) async {
     Uint8List? bytes = path!.files.first.bytes;
@@ -155,15 +138,14 @@ class ConvertService {
       List<List<GreenIntensity>> grid, int year) {
     String shell = "";
     final currentInjectionDayStart = DateTime(year);
-    int startDay = currentInjectionDayStart.day;
+    int startDay = currentInjectionDayStart.weekday;
 
-    if (startDay < 6) {
+    if (startDay < 7) {
       startDay += 1;
     } else {
-      startDay = 0;
+      startDay = 1;
     }
-    print(startDay);
-    // print(currentdayidk);
+
     int counter = 0;
     for (int j = 0 + startDay; j < grid[0].length; j++) {
       for (int i = 0; i < grid.length; i++) {
@@ -175,22 +157,22 @@ class ConvertService {
           shell += "git add .\n";
           final currentInjectionDay =
               currentInjectionDayStart + counter.days + i.seconds + j.seconds;
+          shell += "git commit -m \"$currentInjectionDayStart\"\n";
           shell +=
               "git commit --amend --date=\"$currentInjectionDay\" -m \"$currentInjectionDay\"\n";
-          shell += "git push\n";
+          shell += "git push origin main\n";
         }
+        // print("commit $commits");
         counter++;
         if (counter >= 365) {
           return shell;
         }
 
-        shell += "\n";
-        print("$i $j");
+        // shell += "\n";
+        // print("$i $j");
       }
-      // shell += "\n";
     }
-    // print(shell);
-    // File('assets/images/temptest.sh').writeAsString(shell);
+
     return shell;
   }
 }

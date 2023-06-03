@@ -60,6 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: MediaQuery.of(context).size.width * 2 / 3,
                     child: ContributionGrid(grid: state.grid),
                   ),
+
                   YearSelect(
                     onSubmit: (year) {
                       try {
