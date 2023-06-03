@@ -154,16 +154,24 @@ class ConvertService {
   String convertContributionGridToShell(
       List<List<GreenIntensity>> grid, int year) {
     String shell = "";
-    final currentInjectionDayStart = DateTime(year, 01, 01);
+    final currentInjectionDayStart = DateTime(year);
+    int startDay = currentInjectionDayStart.day;
 
+    if (startDay < 6) {
+      startDay += 1;
+    } else {
+      startDay = 0;
+    }
+    print(startDay);
+    // print(currentdayidk);
     int counter = 0;
-    for (int i = 0; i < grid.length; i++) {
-      for (int j = 0; j < grid[0].length; j++) {
+    for (int j = 0 + startDay; j < grid[0].length; j++) {
+      for (int i = 0; i < grid.length; i++) {
         int commits = grid[i][j].value();
         for (int k = 0; k < commits; k++) {
-          final TimeOfDay = DateTime.now() - 1.days;
+          final timeOfDay = DateTime.now() - 1.days;
           shell += "touch commitChange.txt\n";
-          shell += "echo \"$TimeOfDay\" >> commitChange.txt\n";
+          shell += "echo \"$timeOfDay\" >> commitChange.txt\n";
           shell += "git add .\n";
           final currentInjectionDay =
               currentInjectionDayStart + counter.days + i.seconds + j.seconds;
@@ -172,7 +180,12 @@ class ConvertService {
           shell += "git push\n";
         }
         counter++;
+        if (counter >= 365) {
+          return shell;
+        }
+
         shell += "\n";
+        print("$i $j");
       }
       // shell += "\n";
     }
