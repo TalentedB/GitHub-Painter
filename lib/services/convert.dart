@@ -140,15 +140,13 @@ class ConvertService {
     final currentInjectionDayStart = DateTime(year);
     int startDay = currentInjectionDayStart.weekday;
 
-    if (startDay < 7) {
-      startDay += 1;
-    } else {
-      startDay = 1;
+    if (startDay == 7) {
+      startDay = 0;
     }
-
+    print(startDay);
     int counter = 0;
-    for (int j = 0 + startDay; j < grid[0].length; j++) {
-      for (int i = 0; i < grid.length; i++) {
+    for (int j = 0; j < grid[0].length; j++) {
+      for (int i = 0 + startDay; i < grid.length; i++) {
         int commits = grid[i][j].value();
         for (int k = 0; k < commits; k++) {
           final timeOfDay = DateTime.now() - 1.days;
@@ -171,6 +169,7 @@ class ConvertService {
         // shell += "\n";
         // print("$i $j");
       }
+      startDay = 0;
     }
 
     return shell;
