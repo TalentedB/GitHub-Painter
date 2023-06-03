@@ -62,16 +62,16 @@ class GreenIntensity {
 
 class ConvertService {
   int convertColor(int color) {
-    if (color < 63.75) {
-      return 4;
-    } else if (color < 127.5) {
-      return 3;
-    } else if (color < 191.25) {
-      return 2;
-    } else if (color < 255) {
-      return 1;
-    } else {
+    if (color < 51) {
       return 0;
+    } else if (color < 102) {
+      return 1;
+    } else if (color < 153) {
+      return 2;
+    } else if (color < 204) {
+      return 3;
+    } else {
+      return 4;
     }
   }
 
