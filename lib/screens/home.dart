@@ -9,6 +9,7 @@ import 'package:github_painter/widgets/year_select.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 
+import '../widgets/alert_banner.dart';
 import '../widgets/green_intensity_key.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -63,7 +64,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               });
                               print(year);
                             } catch (e) {
-                              print("error $e");
+                              showAlert(
+                                  context, "Sir, that's not a number!?", true);
                             }
                           },
                         )
