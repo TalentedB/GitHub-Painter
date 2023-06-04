@@ -60,7 +60,9 @@ class GreenIntensity {
   }
 }
 
+//! This is the service that is used for all conversions in the project
 class ConvertService {
+  //! This is the method that converts the color to a green intensity level
   int convertColor(int color) {
     if (color < 51) {
       return 0;
@@ -75,11 +77,27 @@ class ConvertService {
     }
   }
 
+  //! This is the method that picks the image from the user's computer
   Future<FilePickerResult?> pickImg() async {
     return await FilePicker.platform
         .pickFiles(withData: true, type: FileType.image, allowMultiple: false);
   }
 
+  Future<void> saveShell(String shell) async {
+    await FilePicker.platform
+        .saveFile(
+            fileName: "contribution.sh",
+            allowedExtensions: ["sh"],
+            type: FileType.custom,
+            dialogTitle: "Save Shell Script")
+        .then((value) async {
+      if (value != null) {
+        await File(value).writeAsString(shell);
+      }
+    });
+  }
+
+  //! This is the method that converts the image to a grid format after proccessing
   List<List<GreenIntensity>> imageToContributionGrid(
       img.Image image, int year) {
     final temp = List.generate(
@@ -88,10 +106,11 @@ class ConvertService {
             52,
             (i) =>
                 GreenIntensity(convertColor(image.getPixel(i, j).r as int))));
-    convertContributionGridToShell(temp, year);
+    // convertContributionGridToShell(temp, year);
     return temp;
   }
 
+  //! This is the method that creates the processed image for the user
   void createProccessedImage(
       BuildContext context, FilePickerResult? path, int year) async {
     Uint8List? bytes = path!.files.first.bytes;
@@ -106,6 +125,7 @@ class ConvertService {
         .setGrid(imageToContributionGrid(image, year), "...");
   }
 
+  //! This is the method that converts the image object to a flutter ui object
   Future<ui.Image> convertImageToFlutterUi(img.Image image) async {
     if (image.format != img.Format.uint8 || image.numChannels != 4) {
       final cmd = img.Command()
@@ -134,6 +154,7 @@ class ConvertService {
     return uiImage;
   }
 
+  //! This is the method that converts the grid to a shell script
   String convertContributionGridToShell(
       List<List<GreenIntensity>> grid, int year) {
     String shell = "";
@@ -143,7 +164,6 @@ class ConvertService {
     if (startDay == 7) {
       startDay = 0;
     }
-    print(startDay);
     int counter = 0;
     for (int j = 0; j < grid[0].length; j++) {
       for (int i = 0 + startDay; i < grid.length; i++) {
@@ -160,14 +180,10 @@ class ConvertService {
               "git commit --amend --date=\"$currentInjectionDay\" -m \"$currentInjectionDay\"\n";
           shell += "git push origin main\n";
         }
-        // print("commit $commits");
         counter++;
         if (counter >= 365) {
           return shell;
         }
-
-        // shell += "\n";
-        // print("$i $j");
       }
       startDay = 0;
     }

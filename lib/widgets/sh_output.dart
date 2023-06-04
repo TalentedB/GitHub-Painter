@@ -1,8 +1,10 @@
 import 'dart:math';
-
+import 'package:github_painter/di.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import '../services/convert.dart';
 
 class ShOutput extends StatefulWidget {
   const ShOutput({super.key, required this.output});
@@ -45,7 +47,8 @@ class _ShOutputState extends State<ShOutput> {
               controller: scrollController,
               child: SingleChildScrollView(
                 controller: scrollController,
-                physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                physics: const BouncingScrollPhysics(
+                    parent: AlwaysScrollableScrollPhysics()),
                 child: Text(
                   widget.output,
                   style: const TextStyle(
@@ -57,7 +60,9 @@ class _ShOutputState extends State<ShOutput> {
             ),
           ),
           IconButton(
-            onPressed: () async => await Clipboard.setData(ClipboardData(text: widget.output)),
+            // onPressed: () async => await Clipboard.setData(ClipboardData(text: widget.output)),
+            onPressed: () async =>
+                await sl.get<ConvertService>().saveShell(widget.output),
             icon: const Icon(
               CupertinoIcons.square_fill_on_square_fill,
             ),
