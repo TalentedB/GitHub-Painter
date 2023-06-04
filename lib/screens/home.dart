@@ -9,6 +9,8 @@ import 'package:github_painter/widgets/year_select.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 
+import '../widgets/green_intensity_key.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -28,45 +30,47 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (context, state) {
           if (state is EditState) {
             return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      TextButton(
-                        onPressed: () =>
-                            sl.get<ConvertService>().importImage(context, year),
-                        style: TextButton.styleFrom(
-                            foregroundColor:
-                                const Color.fromARGB(255, 255, 255, 255),
-                            backgroundColor:
-                                const Color.fromARGB(255, 106, 106, 106),
-                            padding: const EdgeInsets.all(10)),
-                        child: const Text("Import"),
-                      ),
-                      YearSelect(
-                        onSubmit: (year) {
-                          try {
-                            setState(() {
-                              this.year = int.parse(year);
-                            });
-                            print(year);
-                          } catch (e) {
-                            print("error $e");
-                          }
-                        },
-                      )
-                    ],
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 2 / 3,
-                    child: ContributionGrid(grid: state.grid),
-                  ),
-
-                  TextButton(
+              child: FractionallySizedBox(
+                widthFactor: 2 / 3,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const GreenIntensityKey(),
+                        const Spacer(),
+                        TextButton(
+                          onPressed: () => sl
+                              .get<ConvertService>()
+                              .importImage(context, year),
+                          style: TextButton.styleFrom(
+                              foregroundColor:
+                                  const Color.fromARGB(255, 255, 255, 255),
+                              backgroundColor:
+                                  const Color.fromARGB(255, 106, 106, 106),
+                              padding: const EdgeInsets.all(10)),
+                          child: const Text("Import"),
+                        ),
+                        const Spacer(),
+                        YearSelect(
+                          onSubmit: (year) {
+                            try {
+                              setState(() {
+                                this.year = int.parse(year);
+                              });
+                              print(year);
+                            } catch (e) {
+                              print("error $e");
+                            }
+                          },
+                        )
+                      ],
+                    ),
+                    ContributionGrid(grid: state.grid),
+                    TextButton(
                       onPressed: () {
                         context.read<GridCubit>().setGrid(
                             (context.read<GridCubit>().state as EditState).grid,
@@ -78,37 +82,37 @@ class _HomeScreenState extends State<HomeScreen> {
                                         .grid,
                                     year));
                       },
-                      child: const Text("Generate Shell Script"),
                       style: TextButton.styleFrom(
-                          primary: const Color.fromARGB(255, 255, 255, 255),
+                          foregroundColor:
+                              const Color.fromARGB(255, 255, 255, 255),
                           backgroundColor:
                               const Color.fromARGB(255, 106, 106, 106),
-                          padding: const EdgeInsets.all(10))),
-                  FractionallySizedBox(
-                    widthFactor: 2 / 3,
-                    child: ShOutput(
+                          padding: const EdgeInsets.all(10)),
+                      child: const Text("Generate Shell Script"),
+                    ),
+                    ShOutput(
                         output: (context.watch<GridCubit>().state as EditState)
                             .output),
-                  ),
-                  // Expanded(
-                  //   child: FutureBuilder(
-                  //     future: sl.get<ConvertService>().createProccessedImage(context, 'assets/images/image5.png'),
-                  //     builder: (context, snapshot) {
-                  //       if (snapshot.hasData) {
-                  //         return Container(
-                  //             // decoration: BoxDecoration(
-                  //             child: RawImage(image: snapshot.data)
-                  //             // ),
-                  //             );
-                  //       } else if (snapshot.hasError) {
-                  //         return Text("loading/error");
-                  //       } else {
-                  //         return Text("loading/error");
-                  //       }
-                  //     },
-                  //   ),
-                  // ),
-                ],
+                    // Expanded(
+                    //   child: FutureBuilder(
+                    //     future: sl.get<ConvertService>().createProccessedImage(context, 'assets/images/image5.png'),
+                    //     builder: (context, snapshot) {
+                    //       if (snapshot.hasData) {
+                    //         return Container(
+                    //             // decoration: BoxDecoration(
+                    //             child: RawImage(image: snapshot.data)
+                    //             // ),
+                    //             );
+                    //       } else if (snapshot.hasError) {
+                    //         return Text("loading/error");
+                    //       } else {
+                    //         return Text("loading/error");
+                    //       }
+                    //     },
+                    //   ),
+                    // ),
+                  ],
+                ),
               ),
             );
           } else {

@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:github_painter/di.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +32,6 @@ class _ShOutputState extends State<ShOutput> {
   Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height / 3,
-      margin: const EdgeInsets.all(10),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
           color: const Color.fromARGB(255, 221, 220, 210).withOpacity(0.9),
