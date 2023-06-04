@@ -83,6 +83,17 @@ class ConvertService {
         .pickFiles(withData: true, type: FileType.image, allowMultiple: false);
   }
 
+  void importImage(BuildContext context, int year) async {
+    final path = await pickImg();
+    if (path != null) {
+      final image = createProccessedImage(path, year);
+      // ignore: use_build_context_synchronously
+      context
+          .read<GridCubit>()
+          .setGrid(imageToContributionGrid(image, year), "...");
+    }
+  }
+
   Future<void> saveShell(String shell) async {
     await FilePicker.platform
         .saveFile(
@@ -111,18 +122,14 @@ class ConvertService {
   }
 
   //! This is the method that creates the processed image for the user
-  void createProccessedImage(
-      BuildContext context, FilePickerResult? path, int year) async {
+  img.Image createProccessedImage(FilePickerResult? path, int year) {
     Uint8List? bytes = path!.files.first.bytes;
     img.Image? image = img.decodePng(bytes!);
     image = img.grayscale(image!);
 
     image = img.pixelate(image, size: image.width ~/ 53);
     image = img.copyResize(image, width: 53, height: 7);
-
-    context
-        .read<GridCubit>()
-        .setGrid(imageToContributionGrid(image, year), "...");
+    return image;
   }
 
   //! This is the method that converts the image object to a flutter ui object

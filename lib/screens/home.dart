@@ -17,14 +17,13 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  FilePickerResult? _image;
   int year = DateTime.now().year;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.blue,
+      backgroundColor: const Color.fromARGB(255, 128, 237, 231),
       body: BlocBuilder<GridCubit, GridState>(
         builder: (context, state) {
           if (state is EditState) {
@@ -32,47 +31,59 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  TextButton(
-                    onPressed: () => sl
-                        .get<ConvertService>()
-                        .createProccessedImage(context, _image, year),
-                    child: const Text("chris click here"),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      context.read<GridCubit>().setGrid(
-                          (context.read<GridCubit>().state as EditState).grid,
-                          sl
-                              .get<ConvertService>()
-                              .convertContributionGridToShell(
-                                  (context.read<GridCubit>().state as EditState)
-                                      .grid,
-                                  year));
-                    },
-                    child: const Text("grid"),
-                  ),
-                  TextButton(
-                    onPressed: () async =>
-                        _image = await sl.get<ConvertService>().pickImg(),
-                    child: const Text("pick img"),
+                  Row(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextButton(
+                        onPressed: () =>
+                            sl.get<ConvertService>().importImage(context, year),
+                        style: TextButton.styleFrom(
+                            foregroundColor:
+                                const Color.fromARGB(255, 255, 255, 255),
+                            backgroundColor:
+                                const Color.fromARGB(255, 106, 106, 106),
+                            padding: const EdgeInsets.all(10)),
+                        child: const Text("Import"),
+                      ),
+                      YearSelect(
+                        onSubmit: (year) {
+                          try {
+                            setState(() {
+                              this.year = int.parse(year);
+                            });
+                            print(year);
+                          } catch (e) {
+                            print("error $e");
+                          }
+                        },
+                      )
+                    ],
                   ),
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 2 / 3,
                     child: ContributionGrid(grid: state.grid),
                   ),
 
-                  YearSelect(
-                    onSubmit: (year) {
-                      try {
-                        setState(() {
-                          this.year = int.parse(year);
-                        });
-                        print(year);
-                      } catch (e) {
-                        print("error $e");
-                      }
-                    },
-                  ),
+                  TextButton(
+                      onPressed: () {
+                        context.read<GridCubit>().setGrid(
+                            (context.read<GridCubit>().state as EditState).grid,
+                            sl
+                                .get<ConvertService>()
+                                .convertContributionGridToShell(
+                                    (context.read<GridCubit>().state
+                                            as EditState)
+                                        .grid,
+                                    year));
+                      },
+                      child: const Text("Generate Shell Script"),
+                      style: TextButton.styleFrom(
+                          primary: const Color.fromARGB(255, 255, 255, 255),
+                          backgroundColor:
+                              const Color.fromARGB(255, 106, 106, 106),
+                          padding: const EdgeInsets.all(10))),
                   FractionallySizedBox(
                     widthFactor: 2 / 3,
                     child: ShOutput(

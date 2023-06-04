@@ -32,20 +32,26 @@ class _YearSelectState extends State<YearSelect> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      constraints: const BoxConstraints(minHeight: 20, maxWidth: 100),
+      width: MediaQuery.of(context).size.width / 20,
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(
           Radius.circular(10),
         ),
-        color: Colors.grey,
+        color: const Color.fromARGB(255, 218, 218, 218),
         border: Border.all(
-          color: Colors.black,
-          width: 2,
+          color: const Color.fromARGB(255, 139, 139, 139),
+          width: 1,
         ),
       ),
-      child: TextField(
-        controller: _controller,
-        onSubmitted: (_) => _handleSubmit(),
+      child: AspectRatio(
+        aspectRatio: 3 / 2,
+        child: Center(
+            child: TextField(
+          controller: _controller,
+          onSubmitted: (_) => _handleSubmit(),
+        )),
       ),
     );
   }
