@@ -60,11 +60,19 @@ class _ShOutputState extends State<ShOutput> {
             ),
           ),
           IconButton(
-            // onPressed: () async => await Clipboard.setData(ClipboardData(text: widget.output)),
+            onPressed: () async =>
+                await Clipboard.setData(ClipboardData(text: widget.output)),
+            // onPressed: () async =>
+            //     await sl.get<ConvertService>().saveShell(widget.output),
+            icon: const Icon(
+              CupertinoIcons.square_fill_on_square_fill,
+            ),
+          ),
+          IconButton(
             onPressed: () async =>
                 await sl.get<ConvertService>().saveShell(widget.output),
             icon: const Icon(
-              CupertinoIcons.square_fill_on_square_fill,
+              CupertinoIcons.arrow_down_circle_fill,
             ),
           ),
         ],
