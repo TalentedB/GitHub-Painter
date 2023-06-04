@@ -8,29 +8,32 @@ GitHub Painter is a Flutter project that allows users to create art in their Git
 
 ## Installation
 
-To use GitHub Painter, please follow these steps:
+To use install the GitHub Painter, please follow these steps:
 
 1. Clone the repository:
-   ```
+   ```sh
    git clone https://github.com/TalentedB/GitHub-Painter.git
    ```
 
 2. Change to the project directory:
-   ```
+   ```sh
    cd GitHub-Painter
    ```
 
-3. Install the necessary dependencies using Flutter:
-   ```
-   flutter pub get
-   ```
+3. Ensure you have [Flutter installed on your system](https://docs.flutter.dev/get-started/install).
 
 ## Usage
 
-Once the installation is complete, you can run the project on an emulator or a physical device using the following command:
+Once the installation is complete, you can run the project on an emulator or a physical device using the following command(s):
 
-```
+For debug mode:
+```sh
 flutter run
+```
+
+For profile mode (runs without debug tools for increased performance):
+```sh
+flutter run --profile
 ```
 
 The GitHub Painter application will open, allowing you to start creating art on your GitHub contribution grid. Here's a brief overview of the available features:
@@ -50,7 +53,7 @@ GitHub Painter also supports importing images to convert them into the grid form
 
 ### Exporting Shell Script
 
-GitHub Painter allows you to easily transform your beautiful art into a shell script that can be run in a repository folder and draw it to your contribution page.
+GitHub Painter allows you to easily transform your beautiful art into a shell script that can be run to paint the displayed pixel-art onto your GitHub contribution graph.
 
 ### Drawing to Contribution Grid
 
@@ -62,11 +65,12 @@ Once you are satisfied with your artwork, you can commit the changes to your Git
 4. It should take a bit but you will obtain a beautiful piece of art on your page.
 
 Please note that committing changes will update your actual GitHub contribution grid, so make sure you are satisfied with your artwork before proceeding.
-(You are able to hide or remove it by deleting the repo)
+
+*(You are able to hide or remove the art by deleting the repo if need arises.)*
 
 ## Contributions
 
-Contributions to GitHub Painter are welcome! If you encounter any bugs, have suggestions for new features, or would like to contribute in any way, please feel free to open an issue or submit a pull request on the GitHub repository.
+Contributions to GitHub Painter are welcome! If you encounter any bugs, have suggestions for new features, or would like to contribute in any way, please feel free to open an [issue](https://github.com/TalentedB/GitHub-Painter/issues) or submit a [pull request](https://github.com/TalentedB/GitHub-Painter/pulls).
 
 ## License
 
