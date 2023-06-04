@@ -36,13 +36,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Row(
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    Wrap(
+                      spacing: MediaQuery.of(context).size.width * 2 / 9,
+                      runSpacing: 10,
+                      runAlignment: WrapAlignment.center,
+                      alignment: WrapAlignment.center,
                       children: [
                         const GreenIntensityKey(),
-                        const Spacer(),
                         TextButton(
                           onPressed: () => sl
                               .get<ConvertService>()
@@ -55,14 +55,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               padding: const EdgeInsets.all(10)),
                           child: const Text("Import"),
                         ),
-                        const Spacer(),
                         YearSelect(
                           onSubmit: (year) {
                             try {
                               setState(() {
                                 this.year = int.parse(year);
                               });
-                              print(year);
                             } catch (e) {
                               showAlert(
                                   context, "Sir, that's not a number!?", true);

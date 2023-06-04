@@ -1,8 +1,6 @@
 import 'package:alert_banner/exports.dart';
 import 'package:flutter/material.dart';
 
-import '../styles/typography.dart';
-
 void showAlert(BuildContext context, String message, bool errorColor) {
   showAlertBanner(
     context,
@@ -18,7 +16,6 @@ void showAlert(BuildContext context, String message, bool errorColor) {
         ),
         child: Text(
           message,
-          style: font2.copyWith(color: Colors.black),
           textAlign: TextAlign.center,
           maxLines: 4,
           overflow: TextOverflow.ellipsis,
